@@ -5,6 +5,7 @@ import SideBar from "@/components/SideBar";
 import SessionProvider from "@/components/SessionProvider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/api/auth/[...nextAuth]";
+import Login from "@/components/Login";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -34,7 +35,7 @@ export default async function RootLayout({
                 </div>
               </div>
             ) : (
-              <p>Login required!</p>
+              <Login />
             )
           }
         </SessionProvider>

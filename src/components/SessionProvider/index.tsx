@@ -14,7 +14,7 @@ const SessionProvider = ({
   children,
 }: Props) => {
   return (
-    <SProvider>
+    <SProvider session={session}>
       {children}
     </SProvider>
   );
