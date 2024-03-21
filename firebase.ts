@@ -15,11 +15,10 @@ const firebaseConfig: FirebaseOptions = {
 // React Approach
 // const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
-
 // Next Approach
 // Singleton Pattern in coding
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
+const fireStoreDB = getFirestore(app);
 
-export { db };
+export { fireStoreDB };

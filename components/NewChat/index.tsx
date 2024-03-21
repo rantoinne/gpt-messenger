@@ -1,4 +1,6 @@
+import { fireStoreDB } from '@/firebase';
 import { PlusIcon } from '@heroicons/react/24/solid';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -8,13 +10,29 @@ const NewChat = () => {
   const { data: sessionData } = useSession();
   
   const initialiseNewChat = async () => {
-
+    try {
+      const doc = await addDoc(
+        collection(
+          fireStoreDB,
+          'users',
+          sessionData?.user?.email!,
+          'chats'
+        ), {
+          messages: [],
+          userId: sessionData?.user?.email!,
+          createdAt: serverTimestamp(),
+        },
+      );
+      router.push(`/chat/${doc.id}`);
+    } catch (e) {
+      console.error(e);
+    }
   };
   
   return (
     <div
       role="button"
-      onClick={initialiseNewChat}
+      onClick={() => initialiseNewChat()}
       className="border-gray-700 border button-row"
     >
       <PlusIcon className="h-4 w-4 mr-2" />
