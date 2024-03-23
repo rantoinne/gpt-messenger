@@ -17,7 +17,7 @@ const firebaseConfig: FirebaseOptions = {
 // const analytics = getAnalytics(app);
 // Next Approach
 // Singleton Pattern in coding
-const app = initializeApp(firebaseConfig);
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
 const fireStoreDB = getFirestore(app);
 

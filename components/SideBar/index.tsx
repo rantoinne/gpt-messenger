@@ -4,7 +4,7 @@ import React from 'react';
 import NewChat from '../NewChat';
 import { signOut, useSession } from 'next-auth/react';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { collection } from 'firebase/firestore';
+import { collection, orderBy, query } from 'firebase/firestore';
 import { fireStoreDB } from '@/firebase';
 import ChatTitleRow from '../ChatTitleRow';
 
@@ -12,7 +12,10 @@ const SideBar = () => {
   const { data: sessionData } = useSession();
 
   const [data, loading, error] = useCollection(
-    sessionData && collection(fireStoreDB, 'users', sessionData.user?.email!, 'chats')
+    sessionData && query(
+      collection(fireStoreDB, 'users', sessionData.user?.email!, 'chats'),
+      orderBy('createdAt', 'asc'),
+    ),
   );
   
   return (
@@ -29,7 +32,7 @@ const SideBar = () => {
             data?.docs.map(chat => (
               <ChatTitleRow
                 key={chat.id}
-                chat={chat}
+                id={chat.id}
               />
             ))
           }

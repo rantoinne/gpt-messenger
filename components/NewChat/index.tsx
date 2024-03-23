@@ -10,23 +10,19 @@ const NewChat = () => {
   const { data: sessionData } = useSession();
   
   const initialiseNewChat = async () => {
-    try {
-      const doc = await addDoc(
-        collection(
-          fireStoreDB,
-          'users',
-          sessionData?.user?.email!,
-          'chats'
-        ), {
-          messages: [],
-          userId: sessionData?.user?.email!,
-          createdAt: serverTimestamp(),
-        },
-      );
-      router.push(`/chat/${doc.id}`);
-    } catch (e) {
-      console.error(e);
-    }
+    const doc = await addDoc(
+      collection(
+        fireStoreDB,
+        'users',
+        sessionData?.user?.email!,
+        'chats'
+      ), {
+        messages: [],
+        userId: sessionData?.user?.email!,
+        createdAt: serverTimestamp(),
+      },
+    );
+    router.push(`/chat/${doc.id}`);
   };
   
   return (
