@@ -6,6 +6,7 @@ import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import React, { FormEvent, useState } from 'react'
+import toast from 'react-hot-toast';
 
 type Props = {
   chatId: string;
@@ -21,11 +22,13 @@ const ChatInput = ({
   
   const sendPromptMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log('Begin!');
 
     if (!messagePrompt) return;
 
     const message = messagePrompt.trim();
     setMessagePrompt('');
+    console.log('Begin 2!');
 
     const messagePayload: Message = {
       text: message,
@@ -38,14 +41,17 @@ const ChatInput = ({
       },
     };
 
-    await addDoc(
-      collection(
-        fireStoreDB, 'users', sessionData?.user?.email!, 'chats', chatId, 'messages'
-      ),
-      messagePayload,
-    );
+    // await addDoc(
+    //   collection(
+    //     fireStoreDB, 'users', sessionData?.user?.email!, 'chats', chatId, 'messages'
+    //   ),
+    //   messagePayload,
+    // );
 
+    console.log('Begin3');
+      
     // Notification
+    const notification = toast.loading('Thinking...');
 
     // Loading
     const res = await fetch('/api/askQuestion', {
@@ -54,14 +60,18 @@ const ChatInput = ({
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        prompt: message,
         chatId,
-        // model,
+        model,
+        prompt: message,
         session: sessionData
       })
     });
     const resJson = res.json();
+    console.log({ resJson });
     // Success
+    toast.success('Responded!', {
+      id: notification,
+    });
   };
   
   return (

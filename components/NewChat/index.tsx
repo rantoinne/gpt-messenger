@@ -17,7 +17,7 @@ const NewChat = () => {
         sessionData?.user?.email!,
         'chats'
       ), {
-        messages: [],
+        // messages: [],
         userId: sessionData?.user?.email!,
         createdAt: serverTimestamp(),
       },
@@ -28,7 +28,7 @@ const NewChat = () => {
   return (
     <div
       role="button"
-      onClick={() => initialiseNewChat()}
+      onClick={initialiseNewChat}
       className="border-gray-700 border button-row"
     >
       <PlusIcon className="h-4 w-4 mr-2" />
