@@ -66,7 +66,7 @@ const ChatInput = ({
         session: sessionData
       })
     });
-    const resJson = res.json();
+    const resJson = await res.json();
     console.log({ resJson });
     // Success
     toast.success('Responded!', {
@@ -75,15 +75,15 @@ const ChatInput = ({
   };
   
   return (
-    <div className="bg-gray-700/50 text-gray-400 rounded-lg text-sm">
+    <div className="bg-gray-700/50 text-gray-400 rounded-lg text-sm m-2">
       <form
         onSubmit={sendPromptMessage}
-        className="p-3 px-5 space-x-5 flex"
+        className="p-2 space-x-5 flex"
       >
         <input
-          value={messagePrompt}
           type="text"
-          className="bg-transparent focus:outline-none flex-1 disabled:cursor-not-allowed disabled:text-gray-300"
+          value={messagePrompt}
+          className="bg-transparent px-2 focus:outline-none flex-1 disabled:cursor-not-allowed disabled:text-gray-300"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessagePrompt(e.target.value)}
           placeholder="Type your message..."
         />

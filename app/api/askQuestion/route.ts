@@ -3,14 +3,11 @@ import { query } from '@/lib/queryApi';
 import { Message } from '@/typings';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-type Response = {
-  name: string;
-};
-
 const handler = async (
   req: NextApiRequest,
   res: NextApiResponse,
-) => {
+): Promise<void> => {
+  console.log('Method recieved', res);
   const {
     chatId,
     model,
@@ -18,15 +15,15 @@ const handler = async (
     session,
   } = req.body;
 
-  if (!prompt) res.status(400).json({ answer: 'Please add prompt message' });
+  if (!prompt)res.json({ answer: 'Please add prompt message' });
 
-  if (!chatId) res.status(400).json({ answer: 'No valid chat provided!' });
+  if (!chatId)res.json({ answer: 'No valid chat provided!' });
 
   const response = await query(prompt, chatId, model);
 
   const message: Message = {
     text: response.text || 'Unable to generate message',
-    createdAt: adminDb.Timestamp.now(),
+    createdAt: new Date(),
     user: {
       _id: 'ChatGPT',
       name: 'ChatGPT',
@@ -34,15 +31,15 @@ const handler = async (
     }
   };
 
-  await adminDb()
-    .collection('users')
-    .doc(session?.user?.email)
-    .collection('chats')
-    .doc(chatId)
-    .collection('messages')
-    .add(message);
+  // await 
+  //   .collection('users')
+  //   .doc(session?.user?.email)
+  //   .collection('chats')
+  //   .doc(chatId)
+  //   .collection('messages')
+  //   .add();
   
-  res.status(200).json({ answer: message.text });
+  res.send({ answer: message.text });
 };
 
-export default handler;
+export { handler as GET, handler as POST };
