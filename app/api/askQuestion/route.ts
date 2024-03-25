@@ -1,23 +1,23 @@
 import { adminDb } from '@/firebaseAdmin';
 import { query } from '@/lib/queryApi';
 import { Message } from '@/typings';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 
-const handler = async (
-  req: NextApiRequest,
-  res: NextApiResponse,
-): Promise<void> => {
-  console.log('Method recieved', res);
+export async function POST(request: Request) {
+  const data = await request.json();
+  
+  console.log({ data });
+  
   const {
     chatId,
     model,
     prompt,
     session,
-  } = req.body;
+  } = data;
 
-  if (!prompt)res.json({ answer: 'Please add prompt message' });
+  if (!prompt) return NextResponse.json({ answer: 'Please add prompt message' });
 
-  if (!chatId)res.json({ answer: 'No valid chat provided!' });
+  if (!chatId) return NextResponse.json({ answer: 'No valid chat provided!' });
 
   const response = await query(prompt, chatId, model);
 
@@ -27,19 +27,17 @@ const handler = async (
     user: {
       _id: 'ChatGPT',
       name: 'ChatGPT',
-      avatar: "https://links.papareact.com/89k",
+      avatar: "https://www.edigitalagency.com.au/wp-content/uploads/chatgpt-logo-white-green-background-png.png",
     }
   };
 
-  // await 
-  //   .collection('users')
-  //   .doc(session?.user?.email)
-  //   .collection('chats')
-  //   .doc(chatId)
-  //   .collection('messages')
-  //   .add();
+  await adminDb
+    .collection('users')
+    .doc(session?.user?.email)
+    .collection('chats')
+    .doc(chatId)
+    .collection('messages')
+    .add(message);
   
-  res.send({ answer: message.text });
+  return NextResponse.json({ answer: message.text });
 };
-
-export { handler as GET, handler as POST };

@@ -18,7 +18,7 @@ const ChatInput = ({
   const [messagePrompt, setMessagePrompt] = useState<string>('');
   const { data: sessionData } = useSession();
 
-  const model = 'text-davinci-003'
+  const model = 'gpt-3.5-turbo-instruct'
   
   const sendPromptMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,12 +41,15 @@ const ChatInput = ({
       },
     };
 
-    // await addDoc(
-    //   collection(
-    //     fireStoreDB, 'users', sessionData?.user?.email!, 'chats', chatId, 'messages'
-    //   ),
-    //   messagePayload,
-    // );
+    addDoc(
+      collection(
+        fireStoreDB, 'users', sessionData?.user?.email!, 'chats', chatId, 'messages'
+      ),
+      messagePayload,
+    )
+    .then((r) => {
+      console.log({ r });
+    });
 
     console.log('Begin3');
       
