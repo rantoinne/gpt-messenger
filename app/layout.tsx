@@ -24,6 +24,7 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <SessionProvider session={session}>
+          {/* TODO: Wrap below component */}
           {
             session ? (
               <div className="flex">

@@ -3,6 +3,7 @@ import { query } from '@/lib/queryApi';
 import { Message } from '@/typings';
 import { NextResponse } from 'next/server';
 
+// Refactor and modularise
 export async function POST(request: Request) {
   const data = await request.json();
   
