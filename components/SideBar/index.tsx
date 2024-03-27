@@ -7,6 +7,7 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { collection, orderBy, query } from 'firebase/firestore';
 import { fireStoreDB } from '@/firebase';
 import ChatTitleRow from '../ChatTitleRow';
+import OpenAiModelSelection from '../OpenAiModelSelection';
 
 const SideBar = () => {
   const { data: sessionData } = useSession();
@@ -23,10 +24,18 @@ const SideBar = () => {
       <div className="flex-1">
         <div>
           <NewChat />
-          <div>
-            {/* Modal Selection */}
+
+          <div className="hidden sm:inline">
+            <OpenAiModelSelection />
           </div>
 
+          <div className="flex flex-col space-y-2 my-2">
+            {loading && (
+              <div className="animate-pulse text-center text-white">
+                <p>Chats are loading...</p>
+              </div>
+            )}
+          </div>
           {/* Map for ChatRows */}
           {
             data?.docs.map(chat => (

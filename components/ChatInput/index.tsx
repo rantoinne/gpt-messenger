@@ -7,6 +7,8 @@ import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
 import React, { FormEvent, useState } from 'react'
 import toast from 'react-hot-toast';
+import OpenAiModelSelection from '../OpenAiModelSelection';
+import useSWR from 'swr';
 
 type Props = {
   chatId: string;
@@ -18,7 +20,9 @@ const ChatInput = ({
   const [messagePrompt, setMessagePrompt] = useState<string>('');
   const { data: sessionData } = useSession();
 
-  const model = 'gpt-3.5-turbo-instruct'
+  const { data: model } = useSWR('models', {
+    fallbackData: 'gpt-3.5-turbo-instruct'
+  });
   
   const sendPromptMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,17 +45,13 @@ const ChatInput = ({
       },
     };
 
-    addDoc(
+    const doc = await addDoc(
       collection(
         fireStoreDB, 'users', sessionData?.user?.email!, 'chats', chatId, 'messages'
       ),
       messagePayload,
-    )
-    .then((r) => {
-      console.log({ r });
-    });
+    );
 
-    console.log('Begin3');
       
     // Notification
     const notification = toast.loading('Thinking...');
@@ -99,8 +99,8 @@ const ChatInput = ({
         </button>
       </form>
 
-      <div>
-        {/* Modal Selection */}
+      <div className="md:hidden">
+        <OpenAiModelSelection />
       </div>
     </div>
   )
