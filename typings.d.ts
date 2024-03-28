@@ -1,7 +1,7 @@
 import { Firestore } from "firebase/firestore"
 
 interface Message {
-  text: string;
+  text: string | undefined;
   createdAt: Firestore.Timestamp;
   user: {
     _id: string;

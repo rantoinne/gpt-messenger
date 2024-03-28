@@ -1,29 +1,36 @@
 import { adminDb } from '@/firebaseAdmin';
-import { query } from '@/lib/queryApi';
+import { createImage, query } from '@/lib/queryApi';
 import { Message } from '@/typings';
 import { NextResponse } from 'next/server';
+import { CompletionChoice } from 'openai/resources/completions.mjs';
 
 // Refactor and modularise
 export async function POST(request: Request) {
   const data = await request.json();
-  
-  console.log({ data });
   
   const {
     chatId,
     model,
     prompt,
     session,
+    generateImage = false,
   } = data;
 
   if (!prompt) return NextResponse.json({ answer: 'Please add prompt message' });
 
   if (!chatId) return NextResponse.json({ answer: 'No valid chat provided!' });
 
-  const response = await query(prompt, chatId, model);
+  let response;
+  if (generateImage) {
+    response = await createImage(prompt, model);
+  } else {
+    response = await query(prompt, model);
+  }
 
   const message: Message = {
-    text: response.text || 'Unable to generate message',
+    text: generateImage
+      ? (response as string)
+      : ((response as CompletionChoice).text || 'Unable to generate message'),
     createdAt: new Date(),
     user: {
       _id: 'ChatGPT',
@@ -34,7 +41,7 @@ export async function POST(request: Request) {
 
   await adminDb
     .collection('users')
-    .doc(session?.user?.email)
+    .doc(session?.user?.email!)
     .collection('chats')
     .doc(chatId)
     .collection('messages')
