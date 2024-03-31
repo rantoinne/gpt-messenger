@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     generateImage = false,
   } = data;
 
-  if (!prompt) return NextResponse.json({ answer: 'Please add prompt message' });
+  if (!prompt) return NextResponse.json({ answer: 'Please add prompt message!' });
 
   if (!chatId) return NextResponse.json({ answer: 'No valid chat provided!' });
 
