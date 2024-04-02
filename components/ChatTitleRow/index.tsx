@@ -35,7 +35,7 @@ const ChatTitleRow = ({ id }: Props) => {
   return (
     <Link
       href={`/chat/${id}`}
-      className={`button-row justify-center items-center ${active && 'bg-gray-700/50'}`}
+      className={`button-row justify-center items-center ${active && 'bg-gray-700/50'} mt-2`}
     >
       <ChatBubbleLeftIcon
         className="h-5 w-5"

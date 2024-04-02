@@ -7,6 +7,7 @@ import React from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore';
 import MessageText from '../MessageText';
 import { ArrowDownCircleIcon } from '@heroicons/react/24/solid';
+import { LoaderIcon } from 'react-hot-toast';
 
 type Props = {
   chatId: string;
@@ -24,6 +25,9 @@ const Chat = ({
 
   return (
     <div className="flex-1 overflow-y-auto overflow-x-hidden">
+      {
+        loading && <LoaderIcon />
+      }
       {
         messages?.empty && (
           <>

@@ -32,6 +32,7 @@ export async function POST(request: Request) {
       ? (response as string)
       : ((response as CompletionChoice).text || 'Unable to generate message'),
     createdAt: new Date(),
+    type: generateImage ? 'IMAGE' : 'TEXT',
     user: {
       _id: 'ChatGPT',
       name: 'ChatGPT',

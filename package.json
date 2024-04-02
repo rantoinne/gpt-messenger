@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "env:gen": "cp .env.dev.sample .env.local && echo '\nCURRENT_ENV=Production'  >> .env.local"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",

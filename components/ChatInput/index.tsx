@@ -18,6 +18,8 @@ const ChatInput = ({
   chatId
 }: Props) => {
   const [messagePrompt, setMessagePrompt] = useState<string>('');
+  const [generateImageFlag, setGenerateImageFlag] = useState<boolean>(false);
+
   const { data: sessionData } = useSession();
 
   const { data: model } = useSWR('models', {
@@ -26,7 +28,6 @@ const ChatInput = ({
   
   const sendPromptMessage = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Begin!');
 
     if (!messagePrompt) return;
 
@@ -45,7 +46,7 @@ const ChatInput = ({
       },
     };
 
-    const doc = await addDoc(
+    await addDoc(
       collection(
         fireStoreDB, 'users', sessionData?.user?.email!, 'chats', chatId, 'messages'
       ),
@@ -57,7 +58,7 @@ const ChatInput = ({
     const notification = toast.loading('Thinking...');
 
     // Loading
-    const res = await fetch('/api/askQuestion', {
+    await fetch('/api/askQuestion', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -66,44 +67,57 @@ const ChatInput = ({
         chatId,
         model,
         prompt: message,
-        session: sessionData
+        session: sessionData,
+        generateImage: generateImageFlag,
       })
     });
-    const resJson = await res.json();
-    console.log({ resJson });
     // Success
     toast.success('Responded!', {
       id: notification,
     });
+
+    setGenerateImageFlag(false);
   };
   
   return (
-    <div className="bg-gray-700/50 text-gray-400 rounded-lg text-sm m-2">
-      <form
-        onSubmit={sendPromptMessage}
-        className="p-2 space-x-5 flex"
-      >
+    <>
+      <label className="flex flex-row self-start justify-center items-center px-2 text-[#FFF]">
         <input
-          type="text"
-          value={messagePrompt}
-          className="bg-transparent px-2 focus:outline-none flex-1 disabled:cursor-not-allowed disabled:text-gray-300"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessagePrompt(e.target.value)}
-          placeholder="Type your message..."
+          type="checkbox"
+          name="radio"
+          className="w-4 h-4 mr-2"
+          value={String(generateImageFlag)}
+          onChange={() => setGenerateImageFlag(!generateImageFlag)}
         />
-
-        <button
-          disabled={!messagePrompt || !sessionData}
-          className="bg-[#11A37F] hover:opacity-50 text-white font-bold px-3 py-3 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed"
+        <p>Generate Image</p>
+      </label>
+      <div className="bg-gray-700/50 text-gray-400 rounded-lg text-sm m-2">
+        <form
+          onSubmit={sendPromptMessage}
+          className="p-2 space-x-5 flex"
         >
-          <PaperAirplaneIcon className="h-5 w-5 -rotate-45" />
-        </button>
-      </form>
+          <input
+            type="text"
+            value={messagePrompt}
+            className="bg-transparent px-2 focus:outline-none flex-1 disabled:cursor-not-allowed disabled:text-gray-300"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessagePrompt(e.target.value)}
+            placeholder="Type your message..."
+          />
 
-      <div className="md:hidden">
-        <OpenAiModelSelection />
+          <button
+            disabled={!messagePrompt || !sessionData}
+            className="bg-[#11A37F] hover:opacity-50 text-white font-bold px-3 py-3 rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            <PaperAirplaneIcon className="h-5 w-5 -rotate-45" />
+          </button>
+        </form>
+
+        {/* <div className="md:hidden">
+          <OpenAiModelSelection />
+        </div> */}
       </div>
-    </div>
-  )
+    </>
+  );
 }
 
 export default ChatInput;

@@ -9,19 +9,21 @@ const Login = () => {
   };
   
   return (
-    <div className="flex flex-col bg-[#11A37F] h-screen items-center justify-center text-center">
-      <Image
-        alt="gpt-messenger-logo"
-        src="https://www.edigitalagency.com.au/wp-content/uploads/chatgpt-logo-white-green-background-png.png"
-        width={300}
-        height={300}
-      />
-      <button
-        onClick={onSignIn}
-        className="text-white font-bold text-3xl animate-pulse"
-      >
-        Sign in to use GPT-messenger
-      </button>
+    <div className="flex flex-col bg-[#000000] h-screen items-center justify-center text-center">
+      <div className="flex flex-col bg-[#11A37F] py-8 px-28 rounded-2xl justify-center items-center space-y-8">
+        <Image
+          alt="gpt-messenger-logo"
+          src="https://www.edigitalagency.com.au/wp-content/uploads/chatgpt-logo-white-green-background-png.png"
+          width={180}
+          height={180}
+        />
+        <button
+          onClick={onSignIn}
+          className="text-white font-bold text-3xl animate-pulse"
+        >
+          Let&apos;s Start
+        </button>
+      </div>
     </div>
   );
 };

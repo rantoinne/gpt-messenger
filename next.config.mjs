@@ -2,7 +2,7 @@
 const nextConfig = {
   images: {
     remotePatterns: [{
-      hostname: 'www.edigitalagency.com.au'
+      hostname: 'www.edigitalagency.com.au',
     }]
   }
 };

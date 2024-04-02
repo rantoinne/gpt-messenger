@@ -8,4 +8,5 @@ interface Message {
     name: string;
     avatar: string;
   };
+  type?: 'IMAGE' | 'TEXT'
 }
