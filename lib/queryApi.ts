@@ -25,7 +25,6 @@ export const query = async (
 
 export const createImage = async (
   prompt: string,
-  model: string,
 ) => {
   try {
     const response = await openai.images.generate({
